@@ -8,10 +8,7 @@ export function Header() {
               CV
             </span>
           </div>
-          <span
-            className="text-foreground font-semibold text-lg tracking-tight"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-          >
+          <span className="text-foreground font-semibold text-lg tracking-tight">
             CV Tailor
           </span>
         </div>
