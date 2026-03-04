@@ -53,7 +53,7 @@ export function CVPdfDocument({ cv }: Props) {
           <View>
             <Text style={styles.sectionHead}>Experience</Text>
             {cv.experience.map((exp, i) => (
-              <View key={i} style={styles.expBlock}>
+              <View key={i} style={styles.expBlock} wrap={false}>
                 <View style={styles.expRow}>
                   <Text style={styles.expTitle}>{exp.title}</Text>
                   <Text style={styles.expPeriod}>{exp.period}</Text>

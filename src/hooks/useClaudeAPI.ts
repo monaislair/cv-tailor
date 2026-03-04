@@ -4,10 +4,29 @@ function stripFences(raw: string): string {
   return raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
 }
 
+/** Runtime check that a parsed JSON value contains the expected top-level keys. */
+function assertShape<T extends Record<string, unknown>>(
+  obj: unknown,
+  requiredKeys: readonly (keyof T)[],
+): asserts obj is T {
+  if (typeof obj !== "object" || obj === null) {
+    throw new Error("The AI returned an incomplete response. Please try again.");
+  }
+  for (const key of requiredKeys) {
+    if (!(key in obj)) {
+      throw new Error(`The AI returned an incomplete response (missing "${String(key)}"). Please try again.`);
+    }
+  }
+}
+
 export function useClaudeAPI() {
   const { dispatch } = useAppState();
 
-  async function callClaude<T>(systemPrompt: string, userMessage: string): Promise<T> {
+  async function callClaude<T extends Record<string, unknown>>(
+    systemPrompt: string,
+    userMessage: string,
+    requiredKeys: readonly (keyof T)[],
+  ): Promise<T> {
     dispatch({ type: "SET_LOADING", payload: true });
     dispatch({ type: "CLEAR_ERROR" });
 
@@ -39,11 +58,15 @@ export function useClaudeAPI() {
       }
       const cleaned = stripFences(rawText);
 
+      let parsed: unknown;
       try {
-        return JSON.parse(cleaned) as T;
+        parsed = JSON.parse(cleaned);
       } catch {
         throw new Error("The AI returned an unexpected format. Please try again.");
       }
+
+      assertShape<T>(parsed, requiredKeys);
+      return parsed;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
       dispatch({ type: "SET_ERROR", payload: message });

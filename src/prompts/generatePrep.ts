@@ -1,4 +1,7 @@
-import type { JobAnalysis } from "@/types";
+import type { JobAnalysis, InterviewQuestion } from "@/types";
+
+// Derived from InterviewQuestion["category"] — stays in sync with the type automatically
+const CATEGORIES: InterviewQuestion["category"][] = ["behavioral", "technical", "situational", "culture"];
 
 export const GENERATE_PREP_SYSTEM = `You are an expert interview coach and career strategist. Your task is to produce exactly 5 personalized interview questions with strategic guidance in structured JSON.
 
@@ -17,7 +20,7 @@ Return this exact schema with no additional fields:
   "questions": [
     {
       "question": "string",
-      "category": "behavioral | technical | situational | culture",
+      "category": "${CATEGORIES.join(" | ")}",
       "whyTheyAsk": "string",
       "yourAngle": "string",
       "keyStory": "string"

@@ -3,6 +3,7 @@ import { useAppState } from "@/hooks/useAppState";
 import { useClaudeAPI } from "@/hooks/useClaudeAPI";
 import { ANALYZE_JOB_SYSTEM, buildAnalyzeJobMessage } from "@/prompts/analyzeJob";
 import { JobAnalysisDisplay } from "@/components/JobAnalyzer/JobAnalysisDisplay";
+import { Button } from "@/components/ui/button";
 import type { JobAnalysis } from "@/types";
 
 type Mode = "input" | "analyzed";
@@ -30,12 +31,9 @@ export function JobAnalyzerTab() {
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">Analysis complete.</p>
-          <button
-            onClick={() => { setJobText(""); setMode("input"); }}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
+          <Button variant="ghost" onClick={() => { setJobText(""); setMode("input"); }}>
             Analyze New Job
-          </button>
+          </Button>
         </div>
         <JobAnalysisDisplay analysis={state.currentJob} />
       </div>
@@ -48,7 +46,8 @@ export function JobAnalyzerTab() {
     try {
       const result = await callClaude<JobAnalysis>(
         ANALYZE_JOB_SYSTEM,
-        buildAnalyzeJobMessage(trimmed)
+        buildAnalyzeJobMessage(trimmed),
+        ["jobTitle", "company", "seniorityLevel", "requiredSkills", "preferredSkills", "keyResponsibilities", "atsKeywords", "remotePolicy", "standoutRequirements"],
       );
       dispatch({ type: "SET_JOB", payload: result });
       setMode("analyzed");
@@ -78,13 +77,9 @@ export function JobAnalyzerTab() {
         <span className="text-xs text-muted-foreground">
           {jobText.length.toLocaleString()} characters
         </span>
-        <button
-          onClick={handleAnalyze}
-          disabled={!jobText.trim() || state.isLoading}
-          className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-md hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >
+        <Button onClick={handleAnalyze} disabled={!jobText.trim() || state.isLoading}>
           {state.isLoading ? "Analyzing…" : "Analyze Job"}
-        </button>
+        </Button>
       </div>
     </div>
   );

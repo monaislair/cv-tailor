@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useAppState } from "@/hooks/useAppState";
 import { MASTER_PROFILE } from "@/data/masterProfile";
+import { Button } from "@/components/ui/button";
 
 type Mode = "edit" | "saved";
 
@@ -48,12 +49,9 @@ export function ProfileTab() {
               </span>
             )}
           </div>
-          <button
-            onClick={handleEdit}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
+          <Button variant="ghost" onClick={handleEdit}>
             Edit Profile
-          </button>
+          </Button>
         </div>
         <div className="bg-card border border-border rounded-lg p-5">
           <pre className="text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed font-sans">
@@ -96,13 +94,9 @@ export function ProfileTab() {
         <span className="text-xs text-muted-foreground">
           {text.length.toLocaleString()} characters
         </span>
-        <button
-          onClick={handleSave}
-          disabled={!text.trim()}
-          className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-md hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >
+        <Button onClick={handleSave} disabled={!text.trim()}>
           Save Profile
-        </button>
+        </Button>
       </div>
     </div>
   );

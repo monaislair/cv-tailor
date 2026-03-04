@@ -3,6 +3,7 @@ import { useAppState } from "@/hooks/useAppState";
 import { useClaudeAPI } from "@/hooks/useClaudeAPI";
 import { GENERATE_CV_SYSTEM, buildGenerateCVMessage } from "@/prompts/generateCV";
 import { CVDisplay } from "@/components/CVGenerator/CVDisplay";
+import { Button } from "@/components/ui/button";
 import { buildFilename, triggerBlobDownload } from "@/utils/pdfExport";
 import type { GeneratedCV } from "@/types";
 
@@ -18,7 +19,8 @@ export function CVGeneratorTab() {
     try {
       const result = await callClaude<GeneratedCV>(
         GENERATE_CV_SYSTEM,
-        buildGenerateCVMessage(state.masterProfile!.rawText, state.currentJob!)
+        buildGenerateCVMessage(state.masterProfile!.rawText, state.currentJob!),
+        ["name", "contact", "summary", "experience", "skills", "education", "certifications"],
       );
       dispatch({ type: "SET_CV", payload: result });
       setMode("generated");
@@ -74,19 +76,12 @@ export function CVGeneratorTab() {
             at <span className="text-foreground">{state.currentJob.company}</span>.
           </p>
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleDownload}
-              disabled={isDownloading}
-              className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-md hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
+            <Button onClick={handleDownload} disabled={isDownloading}>
               {isDownloading ? "Generating PDF…" : "Download PDF"}
-            </button>
-            <button
-              onClick={() => setMode("idle")}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
+            </Button>
+            <Button variant="ghost" onClick={() => setMode("idle")}>
               Regenerate
-            </button>
+            </Button>
           </div>
         </div>
         <CVDisplay cv={state.generatedCV} />
@@ -105,13 +100,9 @@ export function CVGeneratorTab() {
           reordering bullets by relevance and weaving in ATS keywords naturally.
         </p>
       </div>
-      <button
-        onClick={handleGenerate}
-        disabled={state.isLoading}
-        className="self-start px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-md hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-      >
+      <Button className="self-start" onClick={handleGenerate} disabled={state.isLoading}>
         {state.isLoading ? "Generating…" : "Generate CV"}
-      </button>
+      </Button>
     </div>
   );
 }

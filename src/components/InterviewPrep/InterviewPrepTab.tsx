@@ -2,6 +2,7 @@ import { useAppState } from "@/hooks/useAppState";
 import { useClaudeAPI } from "@/hooks/useClaudeAPI";
 import { GENERATE_PREP_SYSTEM, buildGeneratePrepMessage } from "@/prompts/generatePrep";
 import { InterviewPrepDisplay } from "@/components/InterviewPrep/InterviewPrepDisplay";
+import { Button } from "@/components/ui/button";
 import type { InterviewPrep } from "@/types";
 
 export function InterviewPrepTab() {
@@ -12,7 +13,8 @@ export function InterviewPrepTab() {
     try {
       const result = await callClaude<InterviewPrep>(
         GENERATE_PREP_SYSTEM,
-        buildGeneratePrepMessage(state.masterProfile!.rawText, state.currentJob!)
+        buildGeneratePrepMessage(state.masterProfile!.rawText, state.currentJob!),
+        ["questions"],
       );
       dispatch({ type: "SET_PREP", payload: result });
     } catch {
@@ -42,13 +44,9 @@ export function InterviewPrepTab() {
             {state.interviewPrep.questions.length} questions for <span className="text-foreground">{state.currentJob.jobTitle}</span>{" "}
             at <span className="text-foreground">{state.currentJob.company}</span>.
           </p>
-          <button
-            onClick={handleGenerate}
-            disabled={state.isLoading}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
+          <Button variant="ghost" onClick={handleGenerate} disabled={state.isLoading}>
             {state.isLoading ? "Regenerating…" : "Regenerate"}
-          </button>
+          </Button>
         </div>
         <InterviewPrepDisplay prep={state.interviewPrep} />
       </div>
@@ -66,13 +64,9 @@ export function InterviewPrepTab() {
           with personalised angles and key stories drawn from your actual experience.
         </p>
       </div>
-      <button
-        onClick={handleGenerate}
-        disabled={state.isLoading}
-        className="self-start px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-md hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-      >
+      <Button className="self-start" onClick={handleGenerate} disabled={state.isLoading}>
         {state.isLoading ? "Generating…" : "Generate Prep"}
-      </button>
+      </Button>
     </div>
   );
 }

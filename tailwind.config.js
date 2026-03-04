@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ["class"],
+  // No darkMode toggle — app uses CSS custom properties for unconditional dark theme
   content: [
     "./index.html",
     "./src/**/*.{ts,tsx}",

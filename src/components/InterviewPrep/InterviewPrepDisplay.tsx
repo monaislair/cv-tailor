@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { InterviewPrep, InterviewQuestion } from "@/types";
 
 const CATEGORY_STYLES: Record<InterviewQuestion["category"], string> = {
@@ -14,11 +14,12 @@ interface Props {
 
 export function InterviewPrepDisplay({ prep }: Props) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-
-  // Reset to first card whenever a new prep arrives (e.g. after regeneration)
-  useEffect(() => {
+  // Reset to first card when prep changes (React-recommended pattern — no useEffect)
+  const [prevPrep, setPrevPrep] = useState(prep);
+  if (prep !== prevPrep) {
+    setPrevPrep(prep);
     setOpenIndex(0);
-  }, [prep]);
+  }
 
   return (
     <div className="flex flex-col gap-3">
