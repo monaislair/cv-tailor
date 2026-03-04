@@ -7,8 +7,8 @@
 
 ## Current Status
 
-**Active sprint:** Sprint 4 — CV Generator
-**Last completed sprint:** Sprint 3 — Job Analyzer
+**Active sprint:** Sprint 5 — Interview Prep
+**Last completed sprint:** Sprint 4 — CV Generator
 **Build status:** ✅ Clean (`tsc --noEmit` + `vite build` pass with zero errors/warnings)
 **Lint status:** ✅ Clean (`eslint .` passes)
 
@@ -159,12 +159,59 @@
 
 ---
 
-## Sprints 4–6 — Not Started
+## Sprint 4 — CV Generator ✅ Complete
+
+### Story 4.1 — CV Generation Prompt
+| Task | Status | Notes |
+|---|---|---|
+| Create `src/prompts/generateCV.ts` | ✅ Done | |
+| Write system prompt + schema | ✅ Done | Strict no-fabrication rules, ATS keyword integration, bullet reordering |
+| Include profile + job analysis in user message | ✅ Done | `buildGenerateCVMessage()` interpolates both |
+| Test with 3 real job descriptions | ⬜ Manual | User acceptance criteria per BACKLOG.md |
+
+### Story 4.2 — CV Display
+| Task | Status | Notes |
+|---|---|---|
+| Create `CVGeneratorTab` component | ✅ Done | Replaces placeholder |
+| Guard: disabled until job analysis exists | ✅ Done | Separate messages for missing profile vs missing job |
+| Loading state during generation | ✅ Done | Button text changes to "Generating…", disabled |
+| Render CV in document-like layout | ✅ Done | `CVDisplay.tsx` — white card, clean typography |
+| Summary, experience, skills, education, certifications | ✅ Done | All sections rendered with proper hierarchy |
+
+### Story 4.3 — PDF Export
+| Task | Status | Notes |
+|---|---|---|
+| Install PDF export library | ✅ Done | `@react-pdf/renderer` — text-based, ATS-friendly |
+| Create `src/utils/pdfExport.ts` | ✅ Done | `buildFilename()` + `triggerBlobDownload()` |
+| Create `CVPdfDocument.tsx` | ✅ Done | react-pdf layout — Helvetica, A4, single-column |
+| "Download PDF" button | ✅ Done | In CVGeneratorTab generated view |
+| ATS-friendly formatting | ✅ Done | Text-based PDF (not image), Helvetica, single column |
+| File named `CV_Name_JobTitle_Company.pdf` | ✅ Done | `buildFilename()` sanitizes all parts |
+| Lazy-load @react-pdf/renderer | ✅ Done | Dynamic import on click — main bundle 260KB, PDF chunk 527KB gzip loads on demand |
+
+### Sprint 4 Quality Notes
+- ✅ Zero TypeScript errors
+- ✅ Zero ESLint violations
+- ✅ One `any` with explanatory comment (react-pdf type bridge — unavoidable without complex generics)
+- ✅ All components under 150 lines
+- ✅ API only called on explicit button click
+- ✅ Cascade state reset confirmed: SET_JOB clears generatedCV — stale CV never shown
+- ✅ `@react-pdf/renderer` lazy-loaded — initial bundle 260KB (82KB gzip), PDF engine loads only on download
+- ✅ PDF is text-based (not image-rasterized) — ATS systems can read it
+- ✅ `URL.revokeObjectURL` deferred 100ms — prevents Firefox download abort
+- ✅ Download catch block dispatches `SET_ERROR` — user sees failure instead of silent reset
+- ✅ Skills section in `CVPdfDocument` guarded — no orphan header when all arrays empty
+- ✅ `generateCV` prompt: required skills listed before preferred in skills output
+- ✅ `const s` renamed to `const styles` in CVPdfDocument — consistent naming
+- ⬜ Manual prompt testing still needed (3 real JDs) — user action required
+
+---
+
+## Sprints 5–6 — Not Started
 
 | Sprint | Scope | Status |
 |---|---|---|
-| Sprint 4 | Epic 4 — CV Generator + PDF export | 🔄 Next |
-| Sprint 5 | Epic 5 — Interview Prep | ⬜ Not started |
+| Sprint 5 | Epic 5 — Interview Prep | 🔄 Next |
 | Sprint 6 | Epic 6 — Polish + Vercel deploy | ⬜ Not started |
 
 ---
@@ -175,7 +222,7 @@
 |---|---|
 | `api/claude.ts` (Vercel proxy) | Sprint 6 — not needed until deployment |
 | `src/prompts/analyzeJob.ts` | ✅ Done — Sprint 3 |
-| `src/prompts/generateCV.ts` | Sprint 4 |
+| `src/prompts/generateCV.ts` | ✅ Done — Sprint 4 |
 | `src/prompts/generatePrep.ts` | Sprint 5 |
 | `src/utils/pdfExport.ts` | Sprint 4 |
 | `src/utils/formatCV.ts` | Sprint 4 |

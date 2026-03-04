@@ -27,7 +27,8 @@ export function useClaudeAPI() {
       });
 
       if (!response.ok) {
-        throw new Error(`API error: ${response.status} ${response.statusText}`);
+        const errData = await response.json().catch(() => ({})) as { error?: { message?: string } };
+        throw new Error(errData.error?.message ?? `API error: ${response.status} ${response.statusText}`);
       }
 
       // Anthropic messages API always returns { content: [{ type, text }] } — asserting that shape here
