@@ -1,8 +1,5 @@
 import { useAppState } from "@/hooks/useAppState";
 
-const MODEL = "claude-sonnet-4-20250514";
-const MAX_TOKENS = 4096;
-
 function stripFences(raw: string): string {
   return raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
 }
@@ -18,22 +15,28 @@ export function useClaudeAPI() {
       const response = await fetch("/api/claude", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // model and max_tokens are pinned server-side in api/claude.ts — not sent here
         body: JSON.stringify({
-          model: MODEL,
-          max_tokens: MAX_TOKENS,
           system: systemPrompt,
           messages: [{ role: "user", content: userMessage }],
         }),
       });
 
       if (!response.ok) {
-        const errData = await response.json().catch(() => ({})) as { error?: { message?: string } };
-        throw new Error(errData.error?.message ?? `API error: ${response.status} ${response.statusText}`);
+        const errData = await response.json().catch(() => ({})) as { error?: string | { message?: string } };
+        const apiMessage =
+          typeof errData.error === "string"
+            ? errData.error
+            : errData.error?.message;
+        throw new Error(apiMessage ?? `API error: ${response.status} ${response.statusText}`);
       }
 
       // Anthropic messages API always returns { content: [{ type, text }] } — asserting that shape here
       const data = await response.json() as { content?: { type: string; text: string }[] };
       const rawText = data.content?.[0]?.text ?? "";
+      if (!rawText) {
+        throw new Error("The AI returned an empty response. Please try again.");
+      }
       const cleaned = stripFences(rawText);
 
       try {

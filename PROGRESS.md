@@ -7,7 +7,7 @@
 
 ## Current Status
 
-**Active sprint:** Sprint 6 — Polish + Deploy
+**Active sprint:** Sprint 6 — Polish + Deploy (infrastructure done, deploy pending)
 **Last completed sprint:** Sprint 5 — Interview Prep
 **Build status:** ✅ Clean (`tsc --noEmit` + `vite build` pass with zero errors/warnings)
 **Lint status:** ✅ Clean (`eslint .` passes)
@@ -239,11 +239,30 @@
 
 ---
 
-## Sprint 6 — Not Started
+## Sprint 6 — In Progress
 
-| Sprint | Scope | Status |
+### Story 6.1 — Vercel Deployment Infrastructure
+| Task | Status | Notes |
 |---|---|---|
-| Sprint 6 | Epic 6 — Polish + Vercel deploy | ⬜ Not started |
+| Install `@vercel/node` dev dependency | ✅ Done | `npm install --save-dev @vercel/node` |
+| Create `api/claude.ts` (Vercel serverless proxy) | ✅ Done | Verbatim from CLAUDE.md spec — key held server-side only |
+| Create `vercel.json` (SPA routing) | ✅ Done | Regex rewrite excludes `/api/` paths |
+| Add global loading indicator to Header | ✅ Done | `Loader2` spinner from `lucide-react`, driven by `state.isLoading` |
+| Fix README — PDF library name | ✅ Done | `html2pdf.js` → `@react-pdf/renderer (text-based, ATS-readable)` |
+| `tsc --noEmit` clean after all Sprint 6 changes | ✅ Done | Zero errors |
+| Connect GitHub repo to Vercel | ⬜ Pending | User action — vercel.com/new |
+| Set `ANTHROPIC_API_KEY` env var in Vercel dashboard | ⬜ Pending | User action — Settings → Environment Variables |
+| Trigger first deploy | ⬜ Pending | Auto-deploys on push to `main` after connect |
+| Smoke test live URL end-to-end | ⬜ Pending | Profile → Analyze → Generate CV → Download PDF → Interview Prep |
+| Update README Live Demo badge with Vercel URL | ⬜ Pending | After first successful deploy |
+| Add README screenshot / GIF | ⬜ Pending | After first working build |
+
+### Sprint 6 Quality Notes
+- ✅ Zero TypeScript errors
+- ✅ Zero ESLint violations
+- ✅ `api/claude.ts` is the only place the Anthropic API key exists — never in client bundle
+- ✅ `vercel.json` SPA rewrite pattern excludes `/api/` — proxy routes not swallowed by client router
+- ✅ Loading indicator is globally visible — no per-tab spinner needed
 
 ---
 
@@ -251,16 +270,16 @@
 
 | Item | Reason |
 |---|---|
-| `api/claude.ts` (Vercel proxy) | Sprint 6 — not needed until deployment |
+| `api/claude.ts` (Vercel proxy) | ✅ Done — Sprint 6 |
 | `src/prompts/analyzeJob.ts` | ✅ Done — Sprint 3 |
 | `src/prompts/generateCV.ts` | ✅ Done — Sprint 4 |
 | `src/prompts/generatePrep.ts` | ✅ Done — Sprint 5 |
-| `src/utils/pdfExport.ts` | Sprint 4 |
-| `src/utils/formatCV.ts` | Sprint 4 |
-| `scripts/bundle-artifact.sh` + Parcel | Sprint 6 |
-| `@vercel/node` dev dependency | Sprint 6 — needed when proxy is written |
+| `src/utils/pdfExport.ts` | ✅ Done — Sprint 4 |
+| `src/utils/formatCV.ts` | ✅ Done — Sprint 4 |
+| `scripts/bundle-artifact.sh` + Parcel | Descoped — Vercel deploy supersedes single-file artifact |
+| `@vercel/node` dev dependency | ✅ Done — Sprint 6 |
 | README screenshot | After first working build |
-| Vercel deployment | Sprint 6 |
+| Vercel deployment | ⬜ Pending user action — Sprint 6 |
 
 ---
 

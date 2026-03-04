@@ -43,7 +43,7 @@ One architectural decision worth noting: the API key never touches the client. A
 | Styling | Tailwind CSS 3 + shadcn/ui |
 | AI | Anthropic Claude API (`claude-sonnet-4-20250514`) |
 | API Security | Vercel serverless proxy — key never client-side |
-| PDF Export | html2pdf.js |
+| PDF Export | @react-pdf/renderer (text-based, ATS-readable) |
 | Build | Vite |
 | Hosting | Vercel |
 

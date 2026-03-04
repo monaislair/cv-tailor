@@ -1,4 +1,9 @@
+import { Loader2 } from "lucide-react";
+import { useAppState } from "@/hooks/useAppState";
+
 export function Header() {
+  const { state } = useAppState();
+
   return (
     <header className="border-b border-border bg-card/50 backdrop-blur-sm">
       <div className="mx-auto max-w-6xl px-6 py-4 flex items-center gap-3">
@@ -15,6 +20,12 @@ export function Header() {
         <span className="text-muted-foreground text-sm hidden sm:block">
           — AI-powered job application assistant
         </span>
+        {state.isLoading && (
+          <div className="ml-auto flex items-center" aria-live="polite" aria-atomic="true">
+            <Loader2 className="h-4 w-4 animate-spin text-accent" aria-hidden="true" />
+            <span className="sr-only">Processing…</span>
+          </div>
+        )}
       </div>
     </header>
   );
