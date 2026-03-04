@@ -2,10 +2,6 @@ export interface MasterProfile {
   rawText: string;
 }
 
-export interface JobDescription {
-  rawText: string;
-}
-
 export interface JobAnalysis {
   jobTitle: string;
   company: string;

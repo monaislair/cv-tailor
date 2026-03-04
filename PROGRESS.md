@@ -7,8 +7,8 @@
 
 ## Current Status
 
-**Active sprint:** Sprint 3 — Job Analyzer
-**Last completed sprint:** Sprint 2 — State + Profile
+**Active sprint:** Sprint 4 — CV Generator
+**Last completed sprint:** Sprint 3 — Job Analyzer
 **Build status:** ✅ Clean (`tsc --noEmit` + `vite build` pass with zero errors/warnings)
 **Lint status:** ✅ Clean (`eslint .` passes)
 
@@ -111,33 +111,51 @@
 
 ---
 
-## Sprint 3 — Job Analyzer 🔄 Next
+## Sprint 3 — Job Analyzer ✅ Complete
 
 ### Story 3.1 — Job Description Input
 | Task | Status | Notes |
 |---|---|---|
-| Create real `JobAnalyzerTab` component | ⬜ Todo | Replace placeholder |
-| Add textarea for job description | ⬜ Todo | |
-| Add "Analyze Job" button | ⬜ Todo | |
-| Validate: require profile before analyzing | ⬜ Todo | |
-| Show loading state | ⬜ Todo | |
+| Create real `JobAnalyzerTab` component | ✅ Done | Replaces placeholder entirely |
+| Add textarea for job description | ✅ Done | 72-char height, disabled during loading |
+| Add "Analyze Job" button | ✅ Done | Disabled when empty or loading, text changes to "Analyzing…" |
+| Validate: require profile before analyzing | ✅ Done | Lock icon guard with actionable message |
+| Show loading state | ✅ Done | Button text + textarea disabled |
+| "Analyze New Job" reset flow | ✅ Done | Clears textarea, returns to input mode |
 
 ### Story 3.2 — Job Analysis Prompt
 | Task | Status | Notes |
 |---|---|---|
-| Create `src/prompts/analyzeJob.ts` | ⬜ Todo | |
-| Write system prompt + schema | ⬜ Todo | |
-| Write user message template | ⬜ Todo | |
-| Test with 3 real job descriptions | ⬜ Todo | Manual prompt acceptance criteria per BACKLOG.md |
+| Create `src/prompts/analyzeJob.ts` | ✅ Done | |
+| Write system prompt + schema | ✅ Done | 10-field schema, strict JSON-only instructions |
+| Write user message template | ✅ Done | `buildAnalyzeJobMessage()` interpolates JD text |
+| Test with 3 real job descriptions | ⬜ Manual | Per BACKLOG.md — user acceptance criteria, cannot be automated |
 
 ### Story 3.3 — Job Analysis Display
 | Task | Status | Notes |
 |---|---|---|
-| Display job title + company | ⬜ Todo | |
-| Required skills as badges | ⬜ Todo | |
-| Preferred skills as badges (different colour) | ⬜ Todo | |
-| Key responsibilities as list | ⬜ Todo | |
-| ATS keywords as highlighted tags | ⬜ Todo | |
+| Create `Badge` UI primitive | ✅ Done | `src/components/ui/badge.tsx` — required/preferred/keyword/info variants |
+| Display job title + company | ✅ Done | Header with seniority + remote + industry badges |
+| Required skills as badges | ✅ Done | Amber (`required` variant) |
+| Preferred skills as badges (different colour) | ✅ Done | Muted (`preferred` variant) |
+| Key responsibilities as list | ✅ Done | Amber arrow bullets |
+| ATS keywords as highlighted tags | ✅ Done | Emerald (`keyword` variant) |
+| Standout requirements | ✅ Done | ⚑ icon, muted text — goes beyond BACKLOG.md spec |
+
+### Sprint 3 Quality Notes
+- ✅ Zero TypeScript errors
+- ✅ Zero ESLint violations
+- ✅ No `any` types
+- ✅ All components under 150 lines (`JobAnalyzerTab` 91 lines, `JobAnalysisDisplay` ~110 lines)
+- ✅ API only called on explicit button click
+- ✅ Profile guard prevents analysis without a master profile
+- ✅ Error handling decoupled — `ErrorBanner` reads from global state, catch block in tab is intentionally empty
+- ✅ `useClaudeAPI` made generic (`callClaude<T>`) — type-safe result without `any`
+- ✅ `MAX_TOKENS` raised 1000 → 4096 — covers analyzeJob safely, unblocks Sprint 4 CV generation
+- ✅ Duplicate key props fixed in `JobAnalysisDisplay` — all list keys are index-prefixed
+- ✅ Dead `JobDescription` type removed from `types/index.ts`
+- ✅ `analyzeJob` prompt: `company` returns "Unknown" when absent; `industryContext` constrained to 1–3 words
+- ⬜ Manual prompt testing still needed (3 real JDs) — user action required
 
 ---
 
@@ -145,7 +163,7 @@
 
 | Sprint | Scope | Status |
 |---|---|---|
-| Sprint 4 | Epic 4 — CV Generator + PDF export | ⬜ Not started |
+| Sprint 4 | Epic 4 — CV Generator + PDF export | 🔄 Next |
 | Sprint 5 | Epic 5 — Interview Prep | ⬜ Not started |
 | Sprint 6 | Epic 6 — Polish + Vercel deploy | ⬜ Not started |
 
@@ -156,7 +174,9 @@
 | Item | Reason |
 |---|---|
 | `api/claude.ts` (Vercel proxy) | Sprint 6 — not needed until deployment |
-| `src/prompts/` (all 3 files) | Sprints 3–5 |
+| `src/prompts/analyzeJob.ts` | ✅ Done — Sprint 3 |
+| `src/prompts/generateCV.ts` | Sprint 4 |
+| `src/prompts/generatePrep.ts` | Sprint 5 |
 | `src/utils/pdfExport.ts` | Sprint 4 |
 | `src/utils/formatCV.ts` | Sprint 4 |
 | `scripts/bundle-artifact.sh` + Parcel | Sprint 6 |
@@ -171,6 +191,7 @@
 | Item | Status |
 |---|---|
 | `src/data/masterProfile.ts` — placeholder content | ⚠️ Needs Nico's real profile pasted in |
+| `ProfileTab` draft lost on tab switch | ⚠️ Unsaved text is discarded on unmount. By design for now — fix requires global draft state (scope creep). Primary flow is paste-then-save; real-world impact is low. |
 
 ---
 

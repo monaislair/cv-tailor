@@ -1,7 +1,7 @@
 import { useAppState } from "@/hooks/useAppState";
 
 const MODEL = "claude-sonnet-4-20250514";
-const MAX_TOKENS = 1000;
+const MAX_TOKENS = 4096;
 
 function stripFences(raw: string): string {
   return raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/i, "").trim();
