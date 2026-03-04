@@ -7,8 +7,8 @@
 
 ## Current Status
 
-**Active sprint:** Sprint 5 — Interview Prep
-**Last completed sprint:** Sprint 4 — CV Generator
+**Active sprint:** Sprint 6 — Polish + Deploy
+**Last completed sprint:** Sprint 5 — Interview Prep
 **Build status:** ✅ Clean (`tsc --noEmit` + `vite build` pass with zero errors/warnings)
 **Lint status:** ✅ Clean (`eslint .` passes)
 
@@ -207,11 +207,42 @@
 
 ---
 
-## Sprints 5–6 — Not Started
+## Sprint 5 — Interview Prep ✅ Complete
+
+### Story 5.1 — Interview Prep Prompt
+| Task | Status | Notes |
+|---|---|---|
+| Create `src/prompts/generatePrep.ts` | ✅ Done | |
+| Write system prompt + schema | ✅ Done | Exactly 5 questions, ≥3 categories, ≤2 per category, no fabrication rule |
+| Instruct Claude to base angles on actual profile experience | ✅ Done | `yourAngle` must name specific project/role; `keyStory` must be concrete situation |
+| Test with 3 different roles | ⬜ Manual | User acceptance criteria per BACKLOG.md |
+
+### Story 5.2 — Interview Prep Display
+| Task | Status | Notes |
+|---|---|---|
+| Create `InterviewPrepTab` component | ✅ Done | Replaces placeholder |
+| Guard: disabled until job analysis exists | ✅ Done | Lock screen with separate messages for missing profile vs missing job |
+| Loading state | ✅ Done | Button text changes; `state.isLoading` disables it |
+| Expandable question cards | ✅ Done | `InterviewPrepDisplay.tsx` — first card open by default |
+| Question, category badge, why/angle/story sections | ✅ Done | Color-coded by category (amber/sky/violet/emerald) |
+| Regenerate flow | ✅ Done | Inline button in generated view; `SET_JOB` auto-clears prep via reducer |
+
+### Sprint 5 Quality Notes
+- ✅ Zero TypeScript errors
+- ✅ Zero ESLint violations
+- ✅ No `any` types
+- ✅ All components under 150 lines (`InterviewPrepTab` 72 lines, `InterviewPrepDisplay` 62 lines)
+- ✅ API only called on explicit button click
+- ✅ `SET_JOB` reducer clears `interviewPrep` — no stale prep shown for new job
+- ✅ No local `mode` state needed — `state.interviewPrep` drives view directly (cleaner than CVGeneratorTab)
+- ⬜ Manual prompt testing still needed (3 real roles) — user action required
+
+---
+
+## Sprint 6 — Not Started
 
 | Sprint | Scope | Status |
 |---|---|---|
-| Sprint 5 | Epic 5 — Interview Prep | 🔄 Next |
 | Sprint 6 | Epic 6 — Polish + Vercel deploy | ⬜ Not started |
 
 ---
@@ -223,7 +254,7 @@
 | `api/claude.ts` (Vercel proxy) | Sprint 6 — not needed until deployment |
 | `src/prompts/analyzeJob.ts` | ✅ Done — Sprint 3 |
 | `src/prompts/generateCV.ts` | ✅ Done — Sprint 4 |
-| `src/prompts/generatePrep.ts` | Sprint 5 |
+| `src/prompts/generatePrep.ts` | ✅ Done — Sprint 5 |
 | `src/utils/pdfExport.ts` | Sprint 4 |
 | `src/utils/formatCV.ts` | Sprint 4 |
 | `scripts/bundle-artifact.sh` + Parcel | Sprint 6 |
