@@ -5,16 +5,16 @@ function stripFences(raw: string): string {
 }
 
 /** Runtime check that a parsed JSON value contains the expected top-level keys. */
-function assertShape<T extends Record<string, unknown>>(
+function assertShape<T extends object>(
   obj: unknown,
-  requiredKeys: readonly (keyof T)[],
+  requiredKeys: readonly (keyof T & string)[],
 ): asserts obj is T {
   if (typeof obj !== "object" || obj === null) {
     throw new Error("The AI returned an incomplete response. Please try again.");
   }
   for (const key of requiredKeys) {
     if (!(key in obj)) {
-      throw new Error(`The AI returned an incomplete response (missing "${String(key)}"). Please try again.`);
+      throw new Error(`The AI returned an incomplete response (missing "${key}"). Please try again.`);
     }
   }
 }
@@ -22,10 +22,10 @@ function assertShape<T extends Record<string, unknown>>(
 export function useClaudeAPI() {
   const { dispatch } = useAppState();
 
-  async function callClaude<T extends Record<string, unknown>>(
+  async function callClaude<T extends object>(
     systemPrompt: string,
     userMessage: string,
-    requiredKeys: readonly (keyof T)[],
+    requiredKeys: readonly (keyof T & string)[],
   ): Promise<T> {
     dispatch({ type: "SET_LOADING", payload: true });
     dispatch({ type: "CLEAR_ERROR" });
